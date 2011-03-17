@@ -23,13 +23,21 @@ sudo modprobe fuse
 cd ../
 echo
 cd ../
+
 rm -rf tmp.s3fs
 
 #install config
 echo -n "install s3fs config"
-sudo cp ${PWD}/passwd-s3fs /etc/passwd-s3fs
+if [ -e ${PWD}/passwd-s3fs ]; then
+  sudo cp ${PWD}/passwd-s3fs /etc/passwd-s3fs
+else
+  echo -n "\nEnter AWS key (see http://gisws.media.osaka-cu.ac.jp/yoshida-wiki/index.php?title=AWS4OSM#s3fs)"
+  read key
+  sudo echo "${key}" >/etc/passwd-s3fs
+fi
 sudo chown www-data:www-data /etc/passwd-s3fs
 sudo chmod 600 /etc/passwd-s3fs
+
 sudo cp ${PWD}/s3fs-www.conf /etc/init/s3fs-www.conf
 echo
 echo "start s3fs"
